@@ -18,3 +18,4 @@ OLAP Cubes: Grouping Sets: https://youtu.be/58nWFb-AJU8
 
 OLAP Cubes: https://youtu.be/fMkaZuxCCqw
 
+Column Format in ROLAP: https://youtu.be/ELlnfNRn8Rw 
