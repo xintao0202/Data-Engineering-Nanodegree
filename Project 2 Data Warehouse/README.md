@@ -46,12 +46,12 @@ Screenshots showing `create_tables.py` and `elt.py` run in the terminal without 
 ![](img/py_run_pass.PNG)
 
 # Explanation of the files in the repository
-`create_table.py`: connect to the Sparkify database, drop any tables if they exist and create staging, fact and dimension tables
-`etl.py`: connect to the Sparkify RedShift database, load song and log data from S3 into staging tables and then process that data into fact and dimension analytics tables in Redshift 
-`sql_queries.py`: define SQL statements, which will be used by the above two python files.
-`dwh.cfg`: this config files has credentials and information regarding host/endpoint name, DB name, DB user name, DB password, IAM role and provided song and event log data S3 location.  
-`README.md`:  includes a summary of the project, how to run the Python scripts, and an explanation of the files in the repository, and discussions about the ETL pipeline.
-`img` folder: includes supporting images used in this markdown file.
+- `create_table.py`: connect to the Sparkify database, drop any tables if they exist and create staging, fact and dimension tables
+- `etl.py`: connect to the Sparkify RedShift database, load song and log data from S3 into staging tables and then process that data into fact and dimension analytics tables in Redshift 
+- `sql_queries.py`: define SQL statements, which will be used by the above two python files.
+- `dwh.cfg`: this config files has credentials and information regarding host/endpoint name, DB name, DB user name, DB password, IAM role and provided song and event log data S3 location.  
+- `README.md`:  includes a summary of the project, how to run the Python scripts, and an explanation of the files in the repository, and discussions about the ETL pipeline.
+- `img` folder: includes supporting images used in this markdown file.
 
 # Final Tables created in AWS Redshift ( with table screenshots)
 The database schema in Redshift is star schema.
