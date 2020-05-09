@@ -35,7 +35,7 @@ The purpose of this project is to develop an ETL pipeline for a database hosted 
    - Dimension tables: `users`, `songs`, `artists`, `time`
    
    After `python create_tables.py` ran, Redshift cluster showing tables have been created
-   ![](after_create_table.PNG)
+   ![](img/after_create_table.PNG)
    
 5. Complete SQL statements for `copy_table_queries` and `insert_table_queries` in file `sql_queries.py`.  
 6. Run `python etl.py` in Terminal. This will:
