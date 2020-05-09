@@ -51,6 +51,7 @@ Screenshots showing `create_tables.py` and `elt.py` run in the terminal without 
 `sql_queries.py`: define SQL statements, which will be used by the above two python files.
 `dwh.cfg`: this config files has credentials and information regarding host/endpoint name, DB name, DB user name, DB password, IAM role and provided song and event log data S3 location.  
 `README.md`:  includes a summary of the project, how to run the Python scripts, and an explanation of the files in the repository, and discussions about the ETL pipeline.
+`img` folder: includes supporting images used in this markdown file.
 
 # Final Tables created in AWS Redshift ( with table screenshots)
 The database schema in Redshift is star schema.
