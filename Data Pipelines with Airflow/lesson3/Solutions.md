@@ -4,4 +4,4 @@
 
 [Exercise 3 Solution: Subdags](https://youtu.be/M-kdhnQ6sdk) 
 
-[Exercise 4 Solution: Building a Full Pipeline]()
+[Exercise 4 Solution: Building a Full Pipeline](Solution_4.py)
