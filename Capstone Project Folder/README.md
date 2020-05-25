@@ -9,4 +9,4 @@
 - Python Package: airflow, s3fs, pandas, yfinance, pyarrow
 - API: Kaggle API 
       - install kaggle api https://github.com/Kaggle/kaggle-api
-- Development enviroment: AWS Cloudformation EC2 instance
+- Development enviroment: AWS Cloudformation EC2 instance: https://aws.amazon.com/blogs/big-data/build-a-concurrent-data-orchestration-pipeline-using-amazon-emr-and-apache-livy/
