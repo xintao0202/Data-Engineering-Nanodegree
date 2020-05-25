@@ -6,7 +6,7 @@ The purpose of this project is build data models (analytical tables) in preparat
 ### Steps taken in the project
 * Step 1: Upload historic raw data to S3 buket
 
-    * Download stock market and stock news data from kaggle (see datasets source) to EC2 machine. Need Kaggle API installed in order to       download from EC2 environment
+    * Download stock pricing, stock news, and compnay information data from kaggle (see datasets source for details) to EC2 machine. Need Kaggle API installed in order to       download from EC2 environment
     * Create DAG `stock_historic_etl_dag.py` to implement the following tasks:
          * i. Save historic raw data in s3://stock.etl/raw-historic-data/.
          * ii. Load raw data from S3 and make staging tables and save to Redshift cluster.
