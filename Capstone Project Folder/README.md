@@ -4,6 +4,13 @@
 The purpose of this project is build data models (analytical tables) in preparation for data analysis and building machine learning models for Stock Market prediction. This project will utlized skills learning in Udacity Data Engineering Nanodegree, including storing data to S3, building data warehouse using Redshift and ETL pipelines using Airflow. The project is developed in AWS ClouldFormation EC2 instance. 
 
 ### Steps taken in the project
+* Item 1
+* Item 2
+* Item 3
+    * Item 3a
+    * Item 3b
+    * Item 3c
+    
 * Step 1: Upload historic raw data to S3 buket 
         * Download stock market and stock news data from kaggle (see datasets source) to EC2 machine. Need Kaggle API installed in order to download from EC2 environment  
         * Create DAG `stock_historic_etl_dag.py` to implement the following tasks:
