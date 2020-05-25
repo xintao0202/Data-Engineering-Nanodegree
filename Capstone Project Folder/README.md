@@ -5,12 +5,19 @@ The purpose of this project is build data models (analytical tables) in preparat
 
 ### Steps taken in the project
 * Step 1: Upload historic raw data to S3 buket
+    * Download stock pricing, stock news, and compnay information data from kaggle (see datasets source for details) to EC2 machine. Need Kaggle API installed in order to download from EC2 environment
+   * Upload historic raw data to s3://stock.etl/raw-historic-data/.
 
-    * Download stock pricing, stock news, and compnay information data from kaggle (see datasets source for details) to EC2 machine. Need Kaggle API installed in order to       download from EC2 environment
-    * Create DAG `stock_historic_etl_dag.py` to implement the following tasks:
-         * i. Save historic raw data in s3://stock.etl/raw-historic-data/.
-         * ii. Load raw data from S3 and make staging tables and save to Redshift cluster.
-         * iii. This DAG will run only once unless need update histric data
+* Step 2: Retrieve data from S3 and process data into analytic tables using Spark
+    * Create EMR cluster
+    * Created a Notebook
+         
+         
+* ii. Load raw data from S3 and make staging tables and save to Redshift cluster.
+* iii. This DAG will run only once unless need update histric data
+
+ * Create DAG `stock_historic_etl_dag.py` to implement the following tasks:
+ 
 
 ### Purpose of the final data model
 The final data model will be used to predict next day's stock market (rise or drop) using previous's one month stock price and most recent world's news.
