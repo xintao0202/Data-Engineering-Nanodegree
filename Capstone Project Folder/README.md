@@ -11,6 +11,8 @@ The purpose of this project is build data models (analytical tables) in preparat
 * Step 2: Retrieve data from S3 and process data into analytic tables using Spark
     * Create EMR cluster
     * Created a Notebook
+    * Adding SSH rules to secruity group:Find group ElasticMapReduce-master -> Inbound -> Edit -> Add rule; Add ssh, for source choose My IP
+    * Use PUTTY SSH to EMR cluster
          
          
 * ii. Load raw data from S3 and make staging tables and save to Redshift cluster.
