@@ -1,18 +1,24 @@
 # Data Engineering Nanodegree Capstone Project: Stock Market Anaysis ETL
 ## Scoping the Project
 ### Project Overview
-The purpose of this project is build data models (analytical tables) in preparation for data analysis and building machine learning models for Stock Market prediction. This project will utlized skills learning in Udacity Data Engineering Nanodegree, including storing data to S3, building data warehouse using Redshift and ETL pipelines using Airflow. The project is developed in AWS ClouldFormation EC2 instance. 
+The purpose of this project is build data models (analytical tables) in preparation for data analysis and building machine learning models for Stock Market prediction. This project will utlized skills learning in Udacity Data Engineering Nanodegree, including storing data to S3, building data warehouse using Redshift, building data lake using Spark and ETL pipelines using Airflow. The project is developed in AWS ClouldFormation EC2 instance. 
 
 ### Steps taken in the project
 * Step 1: Upload historic raw data to S3 buket
     * Download stock pricing, stock news, and compnay information data from kaggle (see datasets source for details) to EC2 machine. Need Kaggle API installed in order to download from EC2 environment
    * Upload historic raw data to s3://stock.etl/raw-historic-data/.
 
-* Step 2: Retrieve data from S3 and process data into analytic tables using Spark
+* Step 2: Retrieve historic raw data from S3 and process data into analytic tables using Spark
     * Create EMR cluster
     * Created a Notebook
     * Adding SSH rules to secruity group:Find group ElasticMapReduce-master -> Inbound -> Edit -> Add rule; Add ssh, for source choose My IP
-    * Use PUTTY SSH to EMR cluster
+    * Use PUTTY SSH to EMR cluster to install package required 
+    * Write up code in Notebook to Retrieve raw data (company info, historic stock pricing, historic news data) from S3, process and combine them, and then save back to S3 individual stock folders. (See the Notebook `stock_predict_prep_etl.ipynb`)
+    * Copy and modify codes into python files and create DAG file for pipepline
+ 
+ * Step 3: Given stock names, scrape most recent stock price and news data
+    * Pull stock data using Yahoo Finance `yfinance` package
+    * Scrape Reddit news data following instructions on https://www.storybench.org/how-to-scrape-reddit-with-python/
          
          
 * ii. Load raw data from S3 and make staging tables and save to Redshift cluster.
