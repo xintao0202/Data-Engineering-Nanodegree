@@ -38,7 +38,7 @@ The final data model will be used to predict next day's stock market (rise or dr
 - Most Recent top 25 world's news data: from Reddit https://www.reddit.com/r/worldnews/top/
 
 ## Setup:
-- Python Package: airflow, s3fs, pandas, yfinance, pyarrow
+- Python Package: airflow, s3fs, pandas, yfinance, pyarrow, praw
 - API: Kaggle API 
       - install kaggle api https://github.com/Kaggle/kaggle-api
       - Add `kaggle` path to system variable `PATH=$PATH:/path/to/file`
