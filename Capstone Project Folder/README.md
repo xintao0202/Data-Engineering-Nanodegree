@@ -43,5 +43,7 @@ The final data model will be used to predict next day's stock market (rise or dr
    * Kaggle API 
       - install kaggle api https://github.com/Kaggle/kaggle-api
       - Add `kaggle` path to system variable `PATH=$PATH:/path/to/file`
-- Development enviroment: AWS Cloudformation EC2 instance: https://aws.amazon.com/blogs/big-data/build-a-concurrent-data-orchestration-pipeline-using-amazon-emr-and-apache-livy/
    * Reddit API
+
+ - Development enviroment: AWS Cloudformation EC2 instance: https://aws.amazon.com/blogs/big-data/build-a-concurrent-data-orchestration-pipeline-using-amazon-emr-and-apache-livy/
+   
