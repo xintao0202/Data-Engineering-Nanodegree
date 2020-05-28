@@ -9,6 +9,9 @@ import os
 import numpy as np
 import s3fs
 import json
+import datetime
+import praw
+import commands
 
 s3 = boto3.resource('s3')
 
@@ -148,3 +151,82 @@ def load_historic_process_save_s3(key_company, key_news, key_stock):
         stock_name=key.upper()
         df=data_transformation(df_company_info, df_news_historic, value, stock_name)
         save_to_s3(df, stock=stock_name, folder="historic.combine")
+
+def download_current_stocks_to_df(stocks, ndays):
+    end=datetime.datetime.now().strftime("%Y-%m-%d")
+    start=(datetime.datetime.now()-datetime.timedelta(days=ndays)).strftime("%Y-%m-%d")
+    stock_dict={}
+    for symbol in stocks:
+        df_symbol=yf.download(symbol,start,end,progress=False)
+        stock_dict.update({symbol:df_symbol})
+    return stock_dict
+
+def get_24hr_news():
+    reddit = praw.Reddit(client_id='FbxkAEhvb7pxbg', \
+                     client_secret='zyl8WnU9X5rr7y5_EeGUVj994kA', \
+                     user_agent='topnewsscraper', \
+                     username='xintao0202', \
+                     password='zangma53@198422')
+    subreddit = reddit.subreddit('worldnews')
+    top_subreddit = subreddit.top("day")
+    topics_dict = { "title":[], "score":[], "created": []}
+    
+    for submission in top_subreddit:
+        topics_dict["title"].append(submission.title)
+        topics_dict["score"].append(submission.score)
+    #     topics_dict["id"].append(submission.id)
+    #     topics_dict["url"].append(submission.url)
+    #     topics_dict["comms_num"].append(submission.num_comments)
+        topics_dict["created"].append(datetime.datetime.fromtimestamp(submission.created))
+    #     topics_dict["body"].append(submission.selftext)
+    
+    topics_df = pd.DataFrame(topics_dict)
+    return topics_df
+
+def transformation_save_stock(stock_df, stock_symbol):
+    # First Keep useful information from stock price tables (Date, close and volume), forward fill missing values. 
+    stock_price_df=stock_df.copy()
+    stock_price_df.drop(['Open','High','Low', 'Close'], axis=1, inplace=True)
+    stock_price_df.fillna(method='ffill')
+    stock_price_df.rename(columns={'Adj Close':'Close'}, inplace=True)
+    
+    
+    # Adding daily return (%), stock_rise (1, 0 if drop), technical indicators 
+    stock_price_df['daily_return']=stock_price_df[['Close']]/stock_price_df[['Close']].shift(1)-1
+    stock_price_df=get_bbands(stock_price_df, 10)
+    stock_price_df=get_SMA(stock_price_df, 10)
+    stock_price_df=get_EMA(stock_price_df, 10)
+    stock_price_df=get_ROC(stock_price_df, 1)
+    stock_price_df['stock_rise']=np.where(stock_price_df['daily_return']>0, 1, 0)
+    
+    # save stock data
+    today_date=datetime.datetime.now().strftime("%Y.%m.%d")
+    save_to_s3(stock_price_df, stock_symbol, "current/stocks/{}".format(today_date))
+    
+def transformation_save_news(news_df):      
+   # process news data
+    news_df_copy=news_df.copy()
+    news_df_copy['Rank']=news_df_copy['score'].rank(method='dense', ascending=False).astype(int)
+    news_df_copy.columns=['News', 'Score', 'Date', 'Rank']
+    news_df_copy=news_df_copy[['Date', 'Rank', 'Score', 'News']] 
+    
+    # save news data
+    save_to_s3(news_df_copy, "24hrNews" "current/news/{}".format(today_date))
+
+def current_stocks_etl(list_of_stocks, ndays):
+    stocks_dict=download_current_stocks_to_df(list_of_stocks, ndays)
+    for key, value in stocks_dict.items():
+        stock_name=key.upper()
+        transformation_save_stock(value, stock_name)
+    
+def current_news_etl():
+    topics_df=get_24hr_news()
+    transformation_save_news(topics_df)
+
+def data_quality_check(folder, n_files):
+    output=os.system("aws s3 ls s3://stock.etl/{}/ --recursive | wc -l".format(folder))
+    if (output!=n_files):
+        raise ValueError('Data quality check failed: file number not match')
+    status, output = commands.getstatusoutput("aws s3api list-objects-v2 --bucket stock.etl --prefix {} --output text --query 'sort_by(Contents,&Size)[0].Size'".format(folder))
+    if (int(output[0]))<=0:
+        raise ValueError('Data quality check failed: contains empty file')
