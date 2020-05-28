@@ -15,7 +15,7 @@ The purpose of this project is build data models (analytical tables) in preparat
      * Perform data quality check for empty files or missing files
      * The code was developed in Jupyter Notebook `stock_predict_prep_etl.ipynb`
      * Copy and modify codes into python files and create DAG file for pipepline. Since they are historic data, the DAG only need run once. A compelted DAG of the historic stock ETL is shown below. 
-     ![](stock_historic_etl_dag.PNG)
+     ![](img/stock_historic_etl_dag.PNG)
  
  * Step 3: Given a list of stock names, scrape most recent stock price and news data
     * Pull stock data using Yahoo Finance `yfinance` package
@@ -25,7 +25,7 @@ The purpose of this project is build data models (analytical tables) in preparat
     * The code was developed in Jupyter Notebook `Data_Model_etl.ipynb`
     * Copy and modify codes into python files and create DAG file for pipepline. Since they are current data, the DAG runs every morning 5:30AM to publish new data. Alls the saved new data can become future's historical data for training.
     * A compelted DAG of the current stock ETL is shown below. 
-     ![](stock_current_etl_dag.PNG)
+     ![](img/stock_current_etl_dag.PNG)
 
 ### Purpose of the final data model
 The final data models, resides in S3 data lake structures, will be used to predict next day's stock market (rise or drop). The machine learning model will be trained and tested on historical data, using news of each, stock closing price, technical indictors as well as company information. The current stock pricing data and most recent (24 hours) news will be input to the machine learning model for prediction. A use case for this is that given a list of 10 stocks, we pull historical data, which already has company info and news build in the dataset. We use the dataset to train ML models. To predict each stock rise or drop, apply the model to current data. Also, we can cross compare the 10 stocks and find the stock with the best return, which needs more analysis and modeling.   
@@ -41,9 +41,9 @@ The final data models, resides in S3 data lake structures, will be used to predi
 * Tools and technologies: In this project, AWS Clouldformation, EMR, S3, Apache Airflow and Spark were used for loading, processing and uploading large amount of data. These tools are well suited for parrel-processing and pipeline the jobs with a lot of flexibility. 
 * Data Model: The data model are stored in a data lake structure. The reason for that is that for this particular purpose of stock prediction, the data structures are simple, mostly time-series data. When we do training, we need the data to be loaded and accessed fairly quickly and doesn't need to go through a lot of transformations. We also need flexibility of the data and schema-on-read access. Therefore data lake would be a better choice here. 
 Below is the data lake structure for historic and current stock/news architecture
-![](historic_combined.PNG)
-![](current_stock.PNG)
-![](current_news>PNG)
+![](img/historic_combined.PNG)
+![](img/current_stock.PNG)
+![](img/current_news>PNG)
 
 ## Execution and Results
 Please find the details in the `stock_predict_prep_etl.ipynb` and `Data_Model_etl.ipynb` files. For a brief summary:
