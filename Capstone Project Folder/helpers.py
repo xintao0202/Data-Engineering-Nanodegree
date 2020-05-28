@@ -302,11 +302,11 @@ def get_24hr_news():
     get news data from Reddit and save to dataframe
     return: a dataframe of 24 hour news
     """
-    reddit = praw.Reddit(client_id='FbxkAEhvb7pxbg', \
-                     client_secret='zyl8WnU9X5rr7y5_EeGUVj994kA', \
-                     user_agent='topnewsscraper', \
-                     username='xintao0202', \
-                     password='zangma53@198422')
+    reddit = praw.Reddit(client_id='<>', \
+                     client_secret='<>', \
+                     user_agent='<>', \
+                     username='<>', \
+                     password='<>')
     subreddit = reddit.subreddit('worldnews')
     top_subreddit = subreddit.top("day")
     topics_dict = { "title":[], "score":[], "created": []}
