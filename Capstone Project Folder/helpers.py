@@ -16,22 +16,72 @@ import commands
 s3 = boto3.resource('s3')
 
 def upload_file_to_S3(filename, key, bucket_name):
+    """
+    perform upload a local file to S3 bucket
+    
+    Args:
+        filename:path and filename
+        key: key of S3 bucket
+        bucket_name: name of S3 bucket
+    
+    return None
+    """
     s3.Bucket(bucket_name).upload_file(filename, key)
 
 def upload_file_to_S3_with_hook(filename, key, bucket_name):
+    """
+    perform upload a local file to S3 bucket using airflow hook
+    
+    Args:
+        filename:path and filename
+        key: key of S3 bucket
+        bucket_name: name of S3 bucket
+    
+    return None
+    """
     hook = airflow.hooks.S3_hook.S3Hook('my_S3_conn')
     hook.load_file(filename, key, bucket_name, replace=True)
 
 def df_to_S3(df, bucket_name, key):
+    """
+    Save a dataframe to S3
+    
+    Args:
+        df:dataframe name
+        key: key of S3 bucket
+        bucket_name: name of S3 bucket
+    
+    return None
+    """
     s3_path="s3://{}/{}".format(bucket_name, key)
     df.to_parquet(s3_path,compression='gzip')
 
 def save_stock_s3(symbol,start,end,bucket_name):
+    """
+    Save current stock data pulled from yahoo finace to S3
+    
+    Args:
+        symbol:stock symbol
+        start: start day of data
+        end: end day of the data
+        bucket_name: name of S3 bucket
+    
+    return None
+    """
     df=yf.download(symbol,start,end,progress=False)
     key=symbol+'-from'+start+'to'+end
     df_to_S3(df, bucket_name, key)
 
 def convert_zip_to_dfs(bucket_name, key):
+    """
+    load a zip file from S3 and convert to dataframe
+    
+    Args:
+        bucket_name: name of S3 bucket
+        key: S3 key
+    
+    return: a dictionary of dataframes
+    """
     s3_resource = boto3.resource('s3')
     zip_obj = s3_resource.Object(bucket_name=bucket_name, key=key)
     buffer = io.BytesIO(zip_obj.get()["Body"].read())
@@ -44,6 +94,15 @@ def convert_zip_to_dfs(bucket_name, key):
     return dfs
 
 def convert_stock_from_zip(bucket_name, key):
+    """
+    load a zip file of stock data from S3 and convert to dataframe
+    
+    Args:
+        bucket_name: name of S3 bucket
+        key: S3 key
+    
+    return: a dictionary of dataframes
+    """
     s3_resource = boto3.resource('s3')
     zip_obj = s3_resource.Object(bucket_name=bucket_name, key=key)
     buffer = io.BytesIO(zip_obj.get()["Body"].read())
@@ -61,6 +120,15 @@ def convert_stock_from_zip(bucket_name, key):
     return stock_dict_historic
 
 def get_bbands(df, ndays):
+    """
+    Calculator Bollinger Bands
+    
+    Args:
+        df: stock dataframe
+        ndays: how many dates to use 
+    
+    return: dataframe with bollinger Bands as an additional column
+    """
     dm = df[['Close']].rolling(ndays).mean()
     ds = df[['Close']].rolling(ndays).std()
     df['upperBB'] = dm + 2 * ds
@@ -69,22 +137,61 @@ def get_bbands(df, ndays):
 
 # Simple Moving Average
 def get_SMA(df, ndays):
+    """
+    Calculator Simple Moving Average
+    
+    Args:
+        df: stock dataframe
+        ndays: how many dates to use 
+    
+    return: dataframe with Simple Moving Average as an additional column
+    """
     df['SMA']=df[['Close']].rolling(ndays).mean()
     return df
 
 # Expontential Moving Average
 def get_EMA(df, ndays):
+    """
+    Calculator Expontential Moving Average
+    
+    Args:
+        df: stock dataframe
+        ndays: how many dates to use 
+    
+    return: dataframe with Expontential Moving Average as an additional column
+    """
     df['EMA'] = df[['Close']].ewm( span = ndays, min_periods = ndays - 1).mean()
     return df
 
 # Rate of Change
+
 def get_ROC(df, ndays):
+    """
+    Calculator Rate of Change
+    
+    Args:
+        df: stock dataframe
+        ndays: how many dates to use 
+    
+    return: dataframe with Rate of Change as an additional column
+    """
     dn = df[['Close']].diff(ndays)
     dd = df[['Close']].shift(ndays)
     df['ROC'] = dn/dd
     return df
 
 def data_transformation(company_df, news_df, stock_df, stock_symbol):
+    """
+    process, transforme and combine company info, news and stock dataframes of a stock
+    
+    Args:
+        company_df: compnay info dataframe
+        news_df: news dataframe
+        stock_df: stock dataframe
+        stock_symbol: stock to use
+    
+    return: a dataframe after process
+    """
     # First Keep useful information from stock price tables (Date, close and volume), forward fill missing values. 
     stock_price_df=stock_df.copy()
     stock_price_df.drop(['Open','High','Low', 'OpenInt'], axis=1, inplace=True)
@@ -122,6 +229,16 @@ def data_transformation(company_df, news_df, stock_df, stock_symbol):
     return df_merge
 
 def save_to_s3(df, stock, folder):
+    """
+    save dataframe to S3 for a given stock to a folder, saving in JSON format
+    
+    Args:
+        df: dataframe to save
+        stock: which stock to use
+        folder: S3 folder to save
+    
+    return: None
+    """
     df_copy=df.copy()
     df_copy.reset_index(inplace=True)
     s3 = boto3.resource('s3')
@@ -132,6 +249,16 @@ def save_to_s3(df, stock, folder):
 
 
 def load_historic_process_save_s3(key_company, key_news, key_stock):
+    """
+    load raw historic data, process and save to S3
+    
+    Args:
+        key_company: key for zip raw file of company info data
+        key_news: key for zip raw file of news data
+        key_stock: key for zip raw file of stock data
+    
+    return: None
+    """
     
     # get company info
     df_companyinfo_list= convert_zip_to_dfs("stock.etl", key_company)
@@ -153,6 +280,15 @@ def load_historic_process_save_s3(key_company, key_news, key_stock):
         save_to_s3(df, stock=stock_name, folder="historic.combine")
 
 def download_current_stocks_to_df(stocks, ndays):
+    """
+    get current stocks data from yahoo fiance and save to dataframe
+    
+    Args:
+        stocks: stocks to pull data 
+        ndays: pull how many days of data
+    
+    return: a dictionary of dataframes
+    """
     end=datetime.datetime.now().strftime("%Y-%m-%d")
     start=(datetime.datetime.now()-datetime.timedelta(days=ndays)).strftime("%Y-%m-%d")
     stock_dict={}
@@ -162,6 +298,10 @@ def download_current_stocks_to_df(stocks, ndays):
     return stock_dict
 
 def get_24hr_news():
+    """
+    get news data from Reddit and save to dataframe
+    return: a dataframe of 24 hour news
+    """
     reddit = praw.Reddit(client_id='FbxkAEhvb7pxbg', \
                      client_secret='zyl8WnU9X5rr7y5_EeGUVj994kA', \
                      user_agent='topnewsscraper', \
@@ -184,6 +324,15 @@ def get_24hr_news():
     return topics_df
 
 def transformation_save_stock(stock_df, stock_symbol):
+    """
+    transform stock data and save to S3
+    
+    Args:
+        stock_df: stock dataframe 
+        stock_symbol: stock symbol
+    
+    return: None
+    """
     # First Keep useful information from stock price tables (Date, close and volume), forward fill missing values. 
     stock_price_df=stock_df.copy()
     stock_price_df.drop(['Open','High','Low', 'Close'], axis=1, inplace=True)
@@ -203,7 +352,15 @@ def transformation_save_stock(stock_df, stock_symbol):
     today_date=datetime.datetime.now().strftime("%Y.%m.%d")
     save_to_s3(stock_price_df, stock_symbol, "current/stocks/{}".format(today_date))
     
-def transformation_save_news(news_df):      
+def transformation_save_news(news_df):  
+    """
+    transform news data and save to S3
+    
+    Args:
+        news_df: news dataframe
+        
+    return: None
+    """
    # process news data
     news_df_copy=news_df.copy()
     news_df_copy['Rank']=news_df_copy['score'].rank(method='dense', ascending=False).astype(int)
@@ -214,16 +371,38 @@ def transformation_save_news(news_df):
     save_to_s3(news_df_copy, "24hrNews" "current/news/{}".format(today_date))
 
 def current_stocks_etl(list_of_stocks, ndays):
+    """
+    Combine pull, process and save stock data ETL
+    
+    Args:
+        list_of_stocks: list of stocks to use
+        ndays: how many days to pull
+        
+    return: None
+    """
     stocks_dict=download_current_stocks_to_df(list_of_stocks, ndays)
     for key, value in stocks_dict.items():
         stock_name=key.upper()
         transformation_save_stock(value, stock_name)
     
 def current_news_etl():
+    """
+    Combine pull, process and save news data ETL     
+    return: None
+    """
     topics_df=get_24hr_news()
     transformation_save_news(topics_df)
 
 def data_quality_check(folder, n_files):
+    """
+    check data quality after ETL
+    
+    Args:
+        folder: folder output file saved in S3
+        n_files: expected number of file
+        
+    return: None
+    """
     output=os.system("aws s3 ls s3://stock.etl/{}/ --recursive | wc -l".format(folder))
     if (output!=n_files):
         raise ValueError('Data quality check failed: file number not match')
