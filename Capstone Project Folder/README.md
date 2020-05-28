@@ -38,7 +38,7 @@ The final data models, resides in S3 data lake structures, will be used to predi
    * Kaggle API 
       - install kaggle api https://github.com/Kaggle/kaggle-api
       - Add `kaggle` path to system variable `PATH=$PATH:/path/to/file`
-   * Reddit API
+   * Reddit API: https://praw.readthedocs.io/en/latest/getting_started/quick_start.html
 
  - Development enviroment: AWS Cloudformation EC2 instance: https://aws.amazon.com/blogs/big-data/build-a-concurrent-data-orchestration-pipeline-using-amazon-emr-and-apache-livy/
    
