@@ -57,10 +57,19 @@ load_historic_process_save_to_S3_task = PythonOperator(
             },
         dag=dag)
 
+data_quality_check = PythonOperator(
+        task_id='data_quality_check',
+        python_callable=data_quality_check,
+        op_kwargs={
+                'folder': "historic.combine",
+		'n_files': 7163
+            },
+        dag=dag)
+
 end_task = DummyOperator(task_id='Stop_execution',  dag=dag)
 
 
 # Use arrows to set dependencies between tasks
 start_task >> [upload_historic_news_to_S3_task, upload_historic_pricing_to_S3_task, upload_company_info_to_S3_task]
 [upload_historic_news_to_S3_task, upload_historic_pricing_to_S3_task, upload_company_info_to_S3_task] >> load_historic_process_save_to_S3_task
-load_historic_process_save_to_S3_task >> end_task 
+load_historic_process_save_to_S3_task >> data_quality_check >> end_task 
