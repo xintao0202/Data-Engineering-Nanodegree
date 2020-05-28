@@ -40,17 +40,13 @@ The final data models, resides in S3 data lake structures, will be used to predi
 ## Defending Decisions
 * Tools and technologies: In this project, AWS Clouldformation, EMR, S3, Apache Airflow and Spark were used for loading, processing and uploading large amount of data. These tools are well suited for parrel-processing and pipeline the jobs with a lot of flexibility. 
 * Data Model: The data model are stored in a data lake structure. The reason for that is that for this particular purpose of stock prediction, the data structures are simple, mostly time-series data. When we do training, we need the data to be loaded and accessed fairly quickly and doesn't need to go through a lot of transformations. We also need flexibility of the data and schema-on-read access. Therefore data lake would be a better choice here. 
-Below is the data lake structure for historic and current stock/news architecture
-![](img/historic_combined.PNG){:height="50%" width="50%"}
-![](img/current_stock.PNG){:height="50%" width="50%"}
-![](img/current_news.PNG){:height="50%" width="50%"}
 
 ## Execution and Results
 Please find the details in the `stock_predict_prep_etl.ipynb` and `Data_Model_etl.ipynb` files. For a brief summary:
 - Data are obtained from five resources: stock historical data, news data and compnay info from three separated Kaggle dataset, current stock pulled from Yahoo finance and current news scraped from Reddit. 
 - Here I used 7000+ stock files with total of 60 million lines of data
 - data format including csv, txt, API and zip. 
-- See above images for resulted data models in S3, expressed in a dictionary way: {"historical data combined": "stock.etl/historic.combined", "current stock": "stock.etl/current/date/stock",  "current news": "stock.etl/current/date/news"}. current data are partitioned by date. Company info are combined with historic data and can be extract from there is needed (also in the zip file). For machine learning prupose of stock prediction, the data model is appropriate.
+- See images at the bottom for resulted data models in S3, expressed in a dictionary way: {"historical data combined": "stock.etl/historic.combined", "current stock": "stock.etl/current/date/stock",  "current news": "stock.etl/current/date/news"}. current data are partitioned by date. Company info are combined with historic data and can be extract from there is needed (also in the zip file). For machine learning prupose of stock prediction, the data model is appropriate.
 - There are two quality checks: check for total number of files equal desired number. Also check the smallest file to make sure no empty files.
 
 ## Datasets Source
@@ -70,4 +66,7 @@ Please find the details in the `stock_predict_prep_etl.ipynb` and `Data_Model_et
 
  - Development enviroment: AWS Cloudformation EC2 instance: https://aws.amazon.com/blogs/big-data/build-a-concurrent-data-orchestration-pipeline-using-amazon-emr-and-apache-livy/
    
-
+## Below is the data lake structure for historic and current stock/news architecture
+![](img/historic_combined.PNG) 
+![](img/current_stock.PNG) 
+![](img/current_news.PNG) 
