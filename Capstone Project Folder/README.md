@@ -41,9 +41,9 @@ The final data models, resides in S3 data lake structures, will be used to predi
 * Tools and technologies: In this project, AWS Clouldformation, EMR, S3, Apache Airflow and Spark were used for loading, processing and uploading large amount of data. These tools are well suited for parrel-processing and pipeline the jobs with a lot of flexibility. 
 * Data Model: The data model are stored in a data lake structure. The reason for that is that for this particular purpose of stock prediction, the data structures are simple, mostly time-series data. When we do training, we need the data to be loaded and accessed fairly quickly and doesn't need to go through a lot of transformations. We also need flexibility of the data and schema-on-read access. Therefore data lake would be a better choice here. 
 Below is the data lake structure for historic and current stock/news architecture
-![](img/historic_combined.PNG)
-![](img/current_stock.PNG)
-![](img/current_news>PNG)
+![](img/historic_combined.PNG | width=100)
+![](img/current_stock.PNG | width=100)
+![](img/current_news.PNG | width=100)
 
 ## Execution and Results
 Please find the details in the `stock_predict_prep_etl.ipynb` and `Data_Model_etl.ipynb` files. For a brief summary:
