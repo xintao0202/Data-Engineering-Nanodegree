@@ -70,3 +70,10 @@ Please find the details in the `stock_predict_prep_etl.ipynb` and `Data_Model_et
 ![](img/historic_combined.PNG) 
 ![](img/current_stock.PNG) 
 ![](img/current_news.PNG) 
+
+# Project Feedback
+- One could also use operating system's task scheduler for scheduling jobs.
+- One could also keep a separate user table for keeping track of users logging in and out and whenever there is a spike in user activity, additional clusters can be initiated.
+- If you are interested in knowing more about the heavy-read system design, I would suggest that you read this tutorial about Netflix system.(https://medium.com/@narengowda/netflix-system-design-dbec30fede8d)
+- I would suggest that you read this experience sharing about the lesson learned when implementing data pipeline. (https://medium.com/velotio-perspectives/lessons-learnt-while-building-an-etl-pipeline-for-mongodb-amazon-redshift-using-apache-airflow-543bb0b75017)
+- A useful resource to know how to classify correctly each type of issue:https://ryanwingate.com/purpose/tidy-data/
